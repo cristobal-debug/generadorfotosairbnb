@@ -12,16 +12,44 @@ body { font-family:'Plus Jakarta Sans',sans-serif; background:#f0f0ef; min-heigh
 h1 { text-align:center; font-size:1.5rem; font-weight:700; margin-bottom:5px; }
 .subtitle { text-align:center; color:var(--gray); font-size:.9rem; margin-bottom:26px; }
 
-/* ---- FORM PANEL ---- */
 .form-panel { max-width:700px; margin:0 auto; background:white; border-radius:14px; padding:28px; box-shadow:0 2px 10px rgba(0,0,0,.08); }
 .form-panel h2 { font-size:1rem; font-weight:700; margin-bottom:18px; padding-bottom:10px; border-bottom:1px solid var(--border); }
+
+/* IMPORT BOX */
+.import-box { background:#fff8f0; border:1.5px solid #ffd0a0; border-radius:12px; padding:18px; margin-bottom:24px; }
+.import-box h3 { font-size:.9rem; font-weight:700; margin-bottom:10px; color:#c45000; display:flex; align-items:center; gap:6px; }
+.import-steps { font-size:.78rem; color:#666; margin-bottom:12px; line-height:1.7; }
+.import-steps b { color:#333; }
+.import-url-row { display:flex; gap:8px; margin-bottom:10px; }
+.import-url-row input { flex:1; border:1.5px solid var(--border); border-radius:8px; padding:9px 12px; font-size:.88rem; font-family:inherit; color:var(--dark); outline:none; transition:border-color .2s; }
+.import-url-row input:focus { border-color:var(--red); }
+.import-url-row button { background:var(--red); color:white; border:none; border-radius:8px; padding:9px 16px; font-size:.85rem; font-weight:700; font-family:inherit; cursor:pointer; white-space:nowrap; transition:background .2s; }
+.import-url-row button:hover { background:#e0284f; }
+.import-url-row button:disabled { opacity:.6; cursor:default; }
+
+.import-divider { text-align:center; font-size:.75rem; color:#aaa; margin:8px 0; position:relative; }
+.import-divider::before, .import-divider::after { content:''; position:absolute; top:50%; width:42%; height:1px; background:#ddd; }
+.import-divider::before { left:0; } .import-divider::after { right:0; }
+
+.html-paste-area { width:100%; height:80px; border:1.5px solid var(--border); border-radius:8px; padding:9px 12px; font-size:.8rem; font-family:monospace; color:var(--dark); resize:vertical; outline:none; transition:border-color .2s; }
+.html-paste-area:focus { border-color:var(--red); }
+.btn-parse-html { width:100%; background:#555; color:white; border:none; border-radius:8px; padding:9px; font-size:.85rem; font-weight:700; font-family:inherit; cursor:pointer; margin-top:7px; transition:background .2s; }
+.btn-parse-html:hover { background:#333; }
+
+.import-status { margin-top:10px; padding:8px 12px; border-radius:7px; font-size:.8rem; display:none; }
+.import-status.ok    { background:#e8f5e9; border:1px solid #a5d6a7; color:#2e7d32; }
+.import-status.error { background:#fce4e4; border:1px solid #ef9a9a; color:#c62828; }
+.import-status.info  { background:#e3f2fd; border:1px solid #90caf9; color:#1565c0; }
+
+/* FORM fields */
 .fg { margin-bottom:12px; }
 .fg label { display:block; font-size:.72rem; font-weight:700; text-transform:uppercase; letter-spacing:.05em; margin-bottom:5px; }
 .fg input { width:100%; border:1.5px solid var(--border); border-radius:8px; padding:9px 12px; font-size:.9rem; font-family:inherit; color:var(--dark); background:white; outline:none; transition:border-color .2s; }
 .fg input:focus { border-color:var(--red); }
 .fg-row  { display:grid; grid-template-columns:1fr 1fr;     gap:10px; }
 .fg-row3 { display:grid; grid-template-columns:1fr 1fr 1fr; gap:10px; }
-.fg-row4 { display:grid; grid-template-columns:1fr 1fr 1fr 1fr; gap:10px; }
+
+.section-title { font-size:.8rem; font-weight:700; text-transform:uppercase; letter-spacing:.04em; color:var(--gray); margin:18px 0 10px; border-top:1px solid var(--border); padding-top:14px; }
 
 .photos-label { font-size:.72rem; font-weight:700; text-transform:uppercase; letter-spacing:.05em; margin-bottom:8px; display:block; }
 .photos-grid { display:grid; grid-template-columns:2fr 1fr 1fr; grid-template-rows:90px 90px; gap:6px; margin-bottom:16px; }
@@ -36,21 +64,44 @@ h1 { text-align:center; font-size:1.5rem; font-weight:700; margin-bottom:5px; }
 .photo-slot:hover .rm-btn { display:flex; }
 .photo-slot input[type="file"] { position:absolute; inset:0; opacity:0; cursor:pointer; z-index:1; }
 
-.section-title { font-size:.8rem; font-weight:700; text-transform:uppercase; letter-spacing:.04em; color:var(--gray); margin:18px 0 10px; border-top:1px solid var(--border); padding-top:14px; }
-
 .btn-gen { width:100%; background:var(--red); color:white; border:none; border-radius:10px; padding:14px; font-size:1rem; font-weight:700; font-family:inherit; cursor:pointer; margin-top:8px; transition:background .2s,transform .1s; }
 .btn-gen:hover { background:#e0284f; }
 .btn-gen:active { transform:scale(.98); }
+
+.photo-url-list { font-size:.72rem; color:var(--gray); margin-top:6px; max-height:60px; overflow-y:auto; }
+.photo-url-list span { display:block; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
 </style>
 </head>
 <body>
 
 <h1>🏠 Generador de Tarjetas Airbnb</h1>
-<p class="subtitle">Rellena los datos, sube las fotos y pulsa "Generar" para ver tu tarjeta</p>
+<p class="subtitle">Importa desde Airbnb o rellena los datos manualmente</p>
 
 <div class="form-panel">
   <h2>✏️ Datos del alojamiento</h2>
 
+  <!-- IMPORT BOX -->
+  <div class="import-box">
+    <h3>🔗 Importar desde Airbnb</h3>
+    <div class="import-steps">
+      <b>Paso 1 — URL automática:</b> pega el link de Airbnb y pulsa "Importar"<br>
+      <b>Paso 2 — Si falla:</b> en la página de Airbnb pulsa <b>Ctrl+U</b> (ver código fuente), selecciona todo con <b>Ctrl+A</b>, copia con <b>Ctrl+C</b> y pega abajo
+    </div>
+
+    <div class="import-url-row">
+      <input type="text" id="airbnb-url" placeholder="https://www.airbnb.es/rooms/12345678">
+      <button id="btn-import-url" onclick="importFromUrl()">🔍 Importar URL</button>
+    </div>
+
+    <div class="import-divider">o pega el código fuente de la página</div>
+
+    <textarea class="html-paste-area" id="html-paste" placeholder="Pega aquí el código HTML de la página de Airbnb (Ctrl+U → Ctrl+A → Ctrl+C)..."></textarea>
+    <button class="btn-parse-html" onclick="parseHTML()">📋 Extraer datos del HTML pegado</button>
+
+    <div class="import-status" id="import-status"></div>
+  </div>
+
+  <!-- FORM FIELDS -->
   <div class="fg"><label>Título del anuncio</label>
     <input type="text" id="f-title" value="céntrico, con aire acondicionado y piscina"></div>
 
@@ -65,7 +116,7 @@ h1 { text-align:center; font-size:1.5rem; font-weight:700; margin-bottom:5px; }
 
   <p class="section-title">⭐ Valoración</p>
   <div class="fg-row">
-    <div class="fg"><label>Puntuación (ej: 5.0)</label><input type="text" id="f-rating" value="5.0"></div>
+    <div class="fg"><label>Puntuación</label><input type="text" id="f-rating" value="5.0"></div>
     <div class="fg"><label>Nº Evaluaciones</label><input type="number" id="f-reviews" value="14" min="0"></div>
   </div>
   <div class="fg-row">
@@ -94,11 +145,11 @@ h1 { text-align:center; font-size:1.5rem; font-weight:700; margin-bottom:5px; }
   </div>
 
   <p class="section-title">📸 Fotos</p>
-  <span class="photos-label">1 foto principal + 4 secundarias</span>
+  <span class="photos-label">1 foto principal + 4 secundarias (sube tus fotos o se usan las importadas)</span>
   <div class="photos-grid">
     <div class="photo-slot main-slot" id="slot-0">
       <input type="file" accept="image/*" onchange="loadPhoto(0,this)">
-      <div class="slot-lbl"><span>🏠</span>Principal<br><small>foto grande</small></div>
+      <div class="slot-lbl"><span>🏠</span>Principal</div>
       <button class="rm-btn" onclick="removePhoto(event,0)">✕</button>
     </div>
     <div class="photo-slot" id="slot-1">
@@ -122,24 +173,363 @@ h1 { text-align:center; font-size:1.5rem; font-weight:700; margin-bottom:5px; }
       <button class="rm-btn" onclick="removePhoto(event,4)">✕</button>
     </div>
   </div>
+  <div class="photo-url-list" id="photo-url-list"></div>
 
   <button class="btn-gen" onclick="generateCard()">🎨 Generar tarjeta en nueva ventana</button>
 </div>
 
 <script>
 const photos = [null,null,null,null,null];
+let importedPhotoUrls = [];
 
+// ─── STATUS HELPER ───────────────────────────────────────
+function setStatus(msg, type='info') {
+  const el = document.getElementById('import-status');
+  el.textContent = msg;
+  el.className = 'import-status ' + type;
+  el.style.display = 'block';
+}
+
+// ─── IMPORTAR DESDE URL ──────────────────────────────────
+async function importFromUrl() {
+  const url = document.getElementById('airbnb-url').value.trim();
+  if (!url) { setStatus('Por favor pega una URL de Airbnb.', 'error'); return; }
+  const btn = document.getElementById('btn-import-url');
+  btn.disabled = true; btn.textContent = '⏳ Cargando...';
+  setStatus('Intentando cargar la página de Airbnb...', 'info');
+
+  // Intentar con varios proxies CORS gratuitos
+  const proxies = [
+    `https://api.allorigins.win/get?url=${encodeURIComponent(url)}`,
+    `https://corsproxy.io/?${encodeURIComponent(url)}`,
+  ];
+
+  let html = null;
+  for (const proxy of proxies) {
+    try {
+      const res = await fetch(proxy, { signal: AbortSignal.timeout(10000) });
+      if (!res.ok) continue;
+      const json = await res.json().catch(() => null);
+      if (json && json.contents) { html = json.contents; break; }
+      // corsproxy returns text
+      const text = await res.text().catch(() => null);
+      if (text && text.includes('<html')) { html = text; break; }
+    } catch(e) { continue; }
+  }
+
+  btn.disabled = false; btn.textContent = '🔍 Importar URL';
+
+  if (!html) {
+    setStatus('❌ Airbnb bloqueó la carga automática. Usa el método manual: abre la página → Ctrl+U → Ctrl+A → Ctrl+C → pega abajo.', 'error');
+    return;
+  }
+
+  extractAndFill(html);
+}
+
+// ─── PARSEAR HTML PEGADO ─────────────────────────────────
+function parseHTML() {
+  const html = document.getElementById('html-paste').value.trim();
+  if (!html) { setStatus('Por favor pega el código HTML primero.', 'error'); return; }
+  extractAndFill(html);
+}
+
+// ─── EXTRACTOR PRINCIPAL ─────────────────────────────────
+function extractAndFill(html) {
+  setStatus('Analizando datos...', 'info');
+  try {
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(html, 'text/html');
+
+    // Intentar extraer JSON-LD (la fuente más fiable)
+    let data = null;
+    doc.querySelectorAll('script[type="application/json"], script[type="application/ld+json"]').forEach(s => {
+      try {
+        const j = JSON.parse(s.textContent);
+        if (j && (j.name || j.title || (j['@type'] && j['@type'].toLowerCase().includes('lodging')))) {
+          data = j;
+        }
+        // Buscar en napi / state data
+        if (!data && s.textContent.includes('"pdp_listing_detail"')) data = {_raw: s.textContent};
+      } catch(e) {}
+    });
+
+    // Buscar en __NEXT_DATA__ o state embebido
+    let rawState = '';
+    doc.querySelectorAll('script').forEach(s => {
+      if (s.textContent.includes('homeTier') || s.textContent.includes('pdp_listing') || s.textContent.includes('listingTitle')) {
+        rawState = s.textContent;
+      }
+    });
+
+    let filled = 0;
+
+    // ── TÍTULO ──
+    const titleSelectors = [
+      '[data-section-id="TITLE_DEFAULT"] h1',
+      'h1[data-testid]',
+      'h1',
+      '[itemprop="name"]',
+    ];
+    let title = '';
+    for (const sel of titleSelectors) {
+      const el = doc.querySelector(sel);
+      if (el && el.textContent.trim().length > 3) { title = el.textContent.trim(); break; }
+    }
+    // Buscar en rawState
+    if (!title && rawState) {
+      const m = rawState.match(/"name"\s*:\s*"([^"]{5,120})"/);
+      if (m) title = m[1];
+    }
+    if (!title && rawState) {
+      const m = rawState.match(/"pdp_listing_title"\s*:\s*"([^"]+)"/);
+      if (m) title = m[1];
+    }
+    if (title) { document.getElementById('f-title').value = title; filled++; }
+
+    // ── TIPO ──
+    let type = '';
+    const typeSelectors = ['[data-section-id="OVERVIEW_DEFAULT"]', '[data-section-id="OVERVIEW_DEFAULT_V2"]'];
+    for (const sel of typeSelectors) {
+      const el = doc.querySelector(sel);
+      if (el) { type = el.querySelector('h2,h3,h4')?.textContent?.trim() || ''; if (type) break; }
+    }
+    if (!type) {
+      const h2s = doc.querySelectorAll('h2');
+      for (const h of h2s) {
+        const t = h.textContent.trim();
+        if (t.includes('Alojamiento') || t.includes('apartamento') || t.includes('habitación') || t.includes('casa')) { type = t; break; }
+      }
+    }
+    if (!type && rawState) {
+      const m = rawState.match(/"room_and_property_type"\s*:\s*"([^"]+)"/);
+      if (m) type = m[1];
+    }
+    if (type) { document.getElementById('f-type').value = type; filled++; }
+
+    // ── HUÉSPEDES / DORMITORIOS / BAÑOS ──
+    const overviewText = doc.body?.textContent || '';
+
+    const guestM = overviewText.match(/(\d+)\s*viajeros?/i) || rawState.match(/"person_capacity"\s*:\s*(\d+)/);
+    if (guestM) { document.getElementById('f-guests').value = guestM[1]; filled++; }
+
+    const bedM = overviewText.match(/(\d+)\s*dormitorios?/i) || rawState.match(/"bedrooms"\s*:\s*(\d+)/);
+    if (bedM) { document.getElementById('f-beds').value = bedM[1]; filled++; }
+
+    const bathM = overviewText.match(/(\d+)\s*baños?/i) || rawState.match(/"bathrooms"\s*:\s*([\d.]+)/);
+    if (bathM) { document.getElementById('f-baths').value = bathM[1]; filled++; }
+
+    // ── RATING ──
+    const ratingM = overviewText.match(/(\d[.,]\d{1,2})\s*(?:★|estrellas?|sobre 5)/i)
+      || rawState.match(/"review_rating"\s*:\s*([\d.]+)/)
+      || rawState.match(/"avg_rating"\s*:\s*([\d.]+)/);
+    if (ratingM) { document.getElementById('f-rating').value = ratingM[1]; filled++; }
+
+    const reviewsM = rawState.match(/"review_count"\s*:\s*(\d+)/)
+      || overviewText.match(/(\d+)\s*evaluaciones?/i)
+      || overviewText.match(/(\d+)\s*reseñas?/i);
+    if (reviewsM) { document.getElementById('f-reviews').value = reviewsM[1]; filled++; }
+
+    // ── ANFITRIÓN ──
+    const hostM = overviewText.match(/Anfitrión[:\s]+([A-ZÁÉÍÓÚÜÑa-záéíóúüñ\s]{2,40})/i)
+      || rawState.match(/"host_name"\s*:\s*"([^"]+)"/);
+    if (hostM) { document.getElementById('f-host').value = hostM[1].trim(); filled++; }
+
+    const expM = rawState.match(/"years_hosting"\s*:\s*(\d+)/)
+      || overviewText.match(/(\d+)\s*año[s]?\s*de\s*experiencia/i);
+    if (expM) {
+      document.getElementById('f-hostexp').value = expM[1] + ' año' + (expM[1]!='1'?'s':'') + ' de experiencia';
+      filled++;
+    }
+
+    // ── PRECIO ──
+    const priceNewM = overviewText.match(/([\d.,]+)\s*€\s*en\s*total/i)
+      || overviewText.match(/Total\s*[:\s]*([\d.,]+)\s*€/i);
+    if (priceNewM) {
+      const p = priceNewM[1].replace(/\./g,'').replace(',','.');
+      document.getElementById('f-price-new').value = Math.round(parseFloat(p)) || priceNewM[1];
+      filled++;
+    }
+
+    // ── FOTOS ──
+    // Decodificar URLs escapadas en JSON de Airbnb
+    function decodeAirbnbUrl(u) {
+      return u
+        .replace(/\\u003F/gi, '?').replace(/\\u003f/gi, '?')
+        .replace(/\\u0026/gi, '&').replace(/\\u002F/gi, '/')
+        .replace(/\\n/g, '').replace(/\\/g, '')
+        .split('"')[0].split("'")[0];
+    }
+
+    // ── FOTOS: extractor limpio ──
+    const imgUrls = [];
+    const seenKeys = new Set();
+
+    function addPhoto(url) {
+      if (!url || typeof url !== 'string') return;
+      if (!url.includes('muscache.com')) return;
+      // Excluir plataforma, avatares, iconos
+      if (url.includes('airbnb-platform-assets') ||
+          url.includes('AirbnbPlatformAssets') ||
+          url.includes('/static/') ||
+          url.includes('/user/') ||
+          url.includes('profile_x_') ||
+          url.includes('profile_medium') ||
+          url.includes('aki_policy=profile') ||
+          url.includes('Review-AI-Synthesis')) return;
+      const clean = url.split('?')[0];
+      const key = clean.split('/').pop().split('.')[0];
+      if (!key || key.length < 5) return;
+      if (seenKeys.has(key)) return;
+      seenKeys.add(key);
+      imgUrls.push(url);
+    }
+
+    // Método 1: JSON-LD (bloques application/ld+json al inicio del HTML)
+    const ldBlocks = html.match(/<script type="application\/ld\+json">[\s\S]*?<\/script>/gi) || [];
+    for (const block of ldBlocks) {
+      try {
+        const inner = block.replace(/<script[^>]*>/i,'').replace(/<\/script>/i,'');
+        const obj = JSON.parse(inner);
+        if (obj.image) {
+          (Array.isArray(obj.image) ? obj.image : [obj.image]).forEach(u => addPhoto(u));
+        }
+      } catch(e) {}
+    }
+
+    // Método 2: "uri":"https://...muscache.com/im/pictures/..."
+    const re2 = /"uri":"(https?:\/\/[^"]*muscache\.com\/im\/pictures\/[^"]+)"/g;
+    let m2;
+    while ((m2 = re2.exec(html)) !== null) addPhoto(m2[1]);
+
+    // Método 3: "baseUrl":"https://...muscache.com/im/pictures/..."
+    const re3 = /"baseUrl":"(https?:\/\/[^"]*muscache\.com\/im\/pictures\/[^"]+)"/g;
+    let m3;
+    while ((m3 = re3.exec(html)) !== null) addPhoto(m3[1]);
+
+    // Método 4: og:image
+    const ogM = html.match(/property="og:image"\s+content="([^"]+muscache[^"]+)"/);
+    if (ogM) addPhoto(ogM[1]);
+
+    const finalUrls = imgUrls.slice(0, 5);
+
+
+    importedPhotoUrls = finalUrls;
+    updatePhotoUrlList();
+
+    // Cargar fotos como base64 para poder usarlas en la tarjeta
+    if (finalUrls.length > 0) {
+      setStatus(`⏳ Cargando ${finalUrls.length} fotos encontradas...`, 'info');
+      loadImportedPhotos(finalUrls).then(loaded => {
+        const msg = filled > 0
+          ? `✅ Importados ${filled} campos y ${loaded} fotos. Revisa y edita lo que necesites.`
+          : `⚠️ No se encontraron datos de texto, pero se cargaron ${loaded} fotos.`;
+        setStatus(msg, loaded > 0 || filled > 0 ? 'ok' : 'error');
+      });
+    } else {
+      const msg = filled > 0
+        ? `✅ Importados ${filled} campos. No se encontraron fotos — súbelas manualmente.`
+        : '⚠️ No se pudo extraer información. Asegúrate de pegar el código fuente completo (Ctrl+U → Ctrl+A → Ctrl+C).';
+      setStatus(msg, filled > 0 ? 'ok' : 'error');
+    }
+
+  } catch(e) {
+    setStatus('❌ Error al analizar: ' + e.message, 'error');
+  }
+}
+
+// ─── CARGAR FOTOS IMPORTADAS ─────────────────────────────
+async function fetchImageAsBase64(url) {
+  // Intentar varios proxies CORS
+  const proxies = [
+    `https://api.allorigins.win/raw?url=${encodeURIComponent(url)}`,
+    `https://corsproxy.io/?${encodeURIComponent(url)}`,
+    `https://api.codetabs.com/v1/proxy?quest=${encodeURIComponent(url)}`,
+  ];
+  for (const proxy of proxies) {
+    try {
+      const res = await fetch(proxy, { signal: AbortSignal.timeout(10000) });
+      if (!res.ok) continue;
+      const blob = await res.blob();
+      if (!blob.type.startsWith('image/') && blob.size < 1000) continue;
+      const b64 = await blobToBase64(blob);
+      if (b64 && b64.length > 500) return b64;
+    } catch(e) { continue; }
+  }
+  // Último recurso: cargar como elemento <img> y dibujar en canvas
+  try {
+    return await loadViaCanvas(url);
+  } catch(e) { return null; }
+}
+
+async function loadViaCanvas(url) {
+  return new Promise((resolve, reject) => {
+    const img = new Image();
+    img.crossOrigin = 'anonymous';
+    img.onload = () => {
+      try {
+        const canvas = document.createElement('canvas');
+        canvas.width = img.naturalWidth || img.width;
+        canvas.height = img.naturalHeight || img.height;
+        canvas.getContext('2d').drawImage(img, 0, 0);
+        resolve(canvas.toDataURL('image/jpeg', 0.92));
+      } catch(e) { reject(e); }
+    };
+    img.onerror = () => reject(new Error('img load failed'));
+    // Intentar cargar directamente (funciona si Airbnb tiene CORS abierto)
+    img.src = url;
+    setTimeout(() => reject(new Error('timeout')), 8000);
+  });
+}
+
+async function loadImportedPhotos(urls) {
+  let loaded = 0;
+  setStatus(`⏳ Cargando fotos (0/${Math.min(urls.length,5)})...`, 'info');
+  for (let i = 0; i < Math.min(urls.length, 5); i++) {
+    setStatus(`⏳ Cargando foto ${i+1} de ${Math.min(urls.length,5)}...`, 'info');
+    const b64 = await fetchImageAsBase64(urls[i]);
+    if (b64) {
+      photos[i] = b64;
+      updateSlotPreview(i, b64);
+      loaded++;
+    }
+  }
+  return loaded;
+}
+
+function blobToBase64(blob) {
+  return new Promise((res, rej) => {
+    const reader = new FileReader();
+    reader.onload = () => res(reader.result);
+    reader.onerror = rej;
+    reader.readAsDataURL(blob);
+  });
+}
+
+function updateSlotPreview(i, src) {
+  const slot = document.getElementById('slot-'+i);
+  slot.classList.add('filled');
+  const old = slot.querySelector('img'); if (old) old.remove();
+  const lbl = slot.querySelector('.slot-lbl'); if (lbl) lbl.style.display='none';
+  const img = document.createElement('img'); img.src = src;
+  slot.insertBefore(img, slot.querySelector('.rm-btn'));
+}
+
+function updatePhotoUrlList() {
+  const el = document.getElementById('photo-url-list');
+  if (importedPhotoUrls.length === 0) { el.innerHTML=''; return; }
+  el.innerHTML = importedPhotoUrls.map((u,i) =>
+    `<span>📷 Foto ${i+1}: ${u.substring(0,70)}...</span>`
+  ).join('');
+}
+
+// ─── FOTO MANUAL ────────────────────────────────────────
 function loadPhoto(i, input) {
   const file = input.files[0]; if (!file) return;
   const reader = new FileReader();
   reader.onload = e => {
     photos[i] = e.target.result;
-    const slot = document.getElementById('slot-'+i);
-    slot.classList.add('filled');
-    const old = slot.querySelector('img'); if (old) old.remove();
-    const lbl = slot.querySelector('.slot-lbl'); if (lbl) lbl.style.display='none';
-    const img = document.createElement('img'); img.src = e.target.result;
-    slot.insertBefore(img, slot.querySelector('.rm-btn'));
+    updateSlotPreview(i, e.target.result);
   };
   reader.readAsDataURL(file);
 }
@@ -153,6 +543,7 @@ function removePhoto(e, i) {
   const fi=slot.querySelector('input[type="file"]'); if(fi) fi.value='';
 }
 
+// ─── GENERAR TARJETA ─────────────────────────────────────
 function generateCard() {
   const data = {
     title:     document.getElementById('f-title').value,
@@ -175,15 +566,32 @@ function generateCard() {
     photos:    photos.slice()
   };
 
+  // Abrir ventana y pasar datos via postMessage (evita límites de tamaño en document.write)
   const win = window.open('', '_blank', 'width=1100,height=820,scrollbars=yes');
-  win.document.write(buildCardHTML(data));
+  // Primero escribimos el HTML sin fotos (placeholder)
+  const dataNoPhotos = Object.assign({}, data, { photos: data.photos.map(() => null) });
+  win.document.write(buildCardHTML(dataNoPhotos));
   win.document.close();
+  // Luego enviamos las fotos via postMessage cuando la ventana esté lista
+  win.addEventListener('load', () => {
+    win.postMessage({ type: 'SET_PHOTOS', photos: data.photos }, '*');
+  });
+  // Fallback si load ya se disparó
+  setTimeout(() => {
+    win.postMessage({ type: 'SET_PHOTOS', photos: data.photos }, '*');
+  }, 800);
+}
+
+function escHTML(str) {
+  return String(str||'')
+    .replace(/&/g,'&amp;').replace(/</g,'&lt;')
+    .replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 }
 
 function buildCardHTML(d) {
-  const ratingNum = parseFloat(d.rating.replace(',','.'));
+  const ratingNum = parseFloat(String(d.rating).replace(',','.'));
   const stars = Math.round(ratingNum);
-  const starsHTML = '★'.repeat(stars) + '☆'.repeat(5-stars);
+  const starsHTML = '★'.repeat(stars) + '☆'.repeat(Math.max(0,5-stars));
 
   function photoCell(idx, extraStyle='') {
     if (d.photos[idx]) {
@@ -203,204 +611,86 @@ function buildCardHTML(d) {
   body { font-family:'Plus Jakarta Sans',sans-serif; background:#f5f5f5; display:flex; flex-direction:column; align-items:center; padding:20px; gap:16px; }
   .dl-bar { background:white; border-radius:10px; padding:12px 20px; display:flex; align-items:center; gap:14px; box-shadow:0 2px 8px rgba(0,0,0,.1); width:1040px; }
   .dl-bar span { font-size:.88rem; color:#555; flex:1; }
-  .dl-btn { background:#FF385C; color:white; border:none; border-radius:8px; padding:10px 22px; font-size:.9rem; font-weight:700; font-family:inherit; cursor:pointer; transition:background .2s; }
+  .dl-btn { background:#FF385C; color:white; border:none; border-radius:8px; padding:10px 22px; font-size:.9rem; font-weight:700; font-family:inherit; cursor:pointer; }
   .dl-btn:hover { background:#e0284f; }
   .dl-btn:disabled { opacity:.6; cursor:default; }
-
-  /* =====================
-     TARJETA AIRBNB EXACTA
-     1040 × 680 px
-     ===================== */
-  #ab-card {
-    width: 1040px;
-    background: white;
-    padding: 0;
-    font-family: 'Plus Jakarta Sans', sans-serif;
-    color: #222;
-  }
-
-  /* Título */
-  .ab-title-bar {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 18px 24px 12px;
-  }
-  .ab-title {
-    font-size: 1.55rem;
-    font-weight: 700;
-    line-height: 1.2;
-  }
-  .ab-title-actions {
-    display: flex; gap: 18px; font-size: .9rem; flex-shrink:0;
-  }
-  .ab-title-actions span {
-    display:flex; align-items:center; gap:5px;
-    text-decoration:underline; cursor:pointer; font-weight:500;
-  }
-
-  /* Mosaico de fotos: ocupa TODO el ancho */
-  .ab-mosaic {
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
-    grid-template-rows: 220px 220px;
-    gap: 4px;
-    margin-bottom: 0;
-    position: relative;
-  }
-  .ab-mosaic-main {
-    grid-column: 1;
-    grid-row: 1 / 3;
-    overflow: hidden;
-  }
-  .ab-mosaic-main img {
-    width:100%; height:100%; object-fit:cover; display:block;
-  }
-  .ab-mosaic-main .ab-photo-ph {
-    width:100%; height:100%;
-    background:linear-gradient(135deg,#e8e8e8,#d0d0d0);
-    display:flex; align-items:center; justify-content:center; font-size:3rem;
-  }
+  #ab-card { width:1040px; background:white; font-family:'Plus Jakarta Sans',sans-serif; color:#222; }
+  .ab-title-bar { display:flex; justify-content:space-between; align-items:center; padding:18px 24px 12px; }
+  .ab-title { font-size:1.55rem; font-weight:700; line-height:1.2; }
+  .ab-title-actions { display:flex; gap:18px; font-size:.9rem; flex-shrink:0; }
+  .ab-title-actions span { display:flex; align-items:center; gap:5px; text-decoration:underline; cursor:pointer; font-weight:500; }
+  .ab-mosaic { display:grid; grid-template-columns:1fr 1fr 1fr; grid-template-rows:220px 220px; gap:4px; position:relative; }
+  .ab-mosaic-main { grid-column:1; grid-row:1/3; overflow:hidden; }
+  .ab-mosaic-main img { width:100%; height:100%; object-fit:cover; display:block; }
+  .ab-mosaic-main .ab-ph { width:100%;height:100%;background:linear-gradient(135deg,#e8e8e8,#d0d0d0);display:flex;align-items:center;justify-content:center;font-size:3rem; }
   .ab-mosaic-cell { overflow:hidden; }
   .ab-mosaic-cell img { width:100%; height:100%; object-fit:cover; display:block; }
-  .ab-mosaic-cell .ab-photo-ph {
-    width:100%; height:100%;
-    background:linear-gradient(135deg,#e8e8e8,#d0d0d0);
-    display:flex; align-items:center; justify-content:center; font-size:2rem;
-  }
-  .ab-show-all {
-    position:absolute; bottom:12px; right:12px;
-    background:white; border:1.5px solid #222; border-radius:8px;
-    padding:7px 14px; font-size:.82rem; font-weight:600;
-    display:flex; align-items:center; gap:6px;
-  }
-
-  /* Cuerpo inferior: info izq + booking der */
-  .ab-body {
-    display: grid;
-    grid-template-columns: 1fr 340px;
-    gap: 0;
-    padding: 20px 24px 22px;
-    align-items: start;
-  }
-
-  /* Info izquierda */
-  .ab-info { padding-right: 30px; border-right: 1px solid #DDDDDD; }
-  .ab-info-type    { font-size: 1.05rem; font-weight: 700; margin-bottom: 3px; }
-  .ab-info-details { font-size: .88rem; color: #717171; margin-bottom: 16px; }
-
-  /* Badge box */
-  .ab-badge {
-    border: 1px solid #DDDDDD;
-    border-radius: 10px;
-    padding: 14px 16px;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    margin-bottom: 18px;
-  }
-  .ab-badge-icon { font-size: 1.3rem; flex-shrink:0; }
-  .ab-badge-label { font-size: .82rem; font-weight: 600; line-height: 1.3; flex:1; }
-  .ab-badge-sep   { width:1px; height:36px; background:#DDDDDD; flex-shrink:0; }
+  .ab-mosaic-cell .ab-ph { width:100%;height:100%;background:linear-gradient(135deg,#e8e8e8,#d0d0d0);display:flex;align-items:center;justify-content:center;font-size:2rem; }
+  .ab-show-all { position:absolute;bottom:12px;right:12px;background:white;border:1.5px solid #222;border-radius:8px;padding:7px 14px;font-size:.82rem;font-weight:600;display:flex;align-items:center;gap:6px; }
+  .ab-body { display:grid; grid-template-columns:1fr 340px; padding:20px 24px 22px; align-items:start; }
+  .ab-info { padding-right:30px; border-right:1px solid #DDDDDD; }
+  .ab-info-type { font-size:1.05rem; font-weight:700; margin-bottom:3px; }
+  .ab-info-details { font-size:.88rem; color:#717171; margin-bottom:16px; }
+  .ab-badge { border:1px solid #DDDDDD; border-radius:10px; padding:14px 16px; display:flex; align-items:center; gap:10px; margin-bottom:18px; }
+  .ab-badge-icon { font-size:1.3rem; flex-shrink:0; }
+  .ab-badge-label { font-size:.82rem; font-weight:600; line-height:1.3; flex:1; }
+  .ab-badge-sep { width:1px; height:36px; background:#DDDDDD; flex-shrink:0; }
   .ab-badge-rating { text-align:center; flex-shrink:0; }
-  .ab-badge-rating .sc { font-size: 1rem; font-weight: 700; }
-  .ab-badge-rating .st { color: #FF385C; font-size: .78rem; }
+  .ab-badge-rating .sc { font-size:1rem; font-weight:700; }
+  .ab-badge-rating .st { color:#FF385C; font-size:.78rem; }
   .ab-badge-reviews { text-align:center; flex-shrink:0; }
-  .ab-badge-reviews .cnt { font-size: 1rem; font-weight: 700; }
-  .ab-badge-reviews .lbl { font-size: .73rem; color: #717171; }
-
-  /* Host */
+  .ab-badge-reviews .cnt { font-size:1rem; font-weight:700; }
+  .ab-badge-reviews .lbl { font-size:.73rem; color:#717171; }
   .ab-host-row { display:flex; align-items:center; gap:12px; margin-top:4px; }
   .ab-avatar { width:44px; height:44px; border-radius:50%; background:linear-gradient(135deg,#f7a1b0,#ff6b8a); display:flex; align-items:center; justify-content:center; font-size:1rem; color:white; font-weight:700; overflow:hidden; flex-shrink:0; }
-  .ab-avatar img { width:100%; height:100%; object-fit:cover; }
   .ab-host-name { font-weight:600; font-size:.93rem; }
-  .ab-host-exp  { color:#717171; font-size:.8rem; margin-top:1px; }
-
-  /* Booking derecha */
-  .ab-booking { padding-left: 26px; }
-  .ab-lucky {
-    background: white;
-    border: 1px solid #DDDDDD;
-    border-radius: 10px;
-    padding: 11px 14px;
-    font-size: .82rem;
-    color: #222;
-    margin-bottom: 16px;
-    display: flex; align-items: flex-start; gap: 8px;
-    box-shadow: 0 1px 6px rgba(0,0,0,.06);
-  }
-  .ab-lucky .diamond { color: #FF385C; font-size: 1rem; flex-shrink:0; margin-top:1px; }
+  .ab-host-exp { color:#717171; font-size:.8rem; margin-top:1px; }
+  .ab-booking { padding-left:26px; }
+  .ab-lucky { background:white; border:1px solid #DDDDDD; border-radius:10px; padding:11px 14px; font-size:.82rem; color:#222; margin-bottom:16px; display:flex; align-items:flex-start; gap:8px; box-shadow:0 1px 6px rgba(0,0,0,.06); }
+  .ab-lucky .diamond { color:#FF385C; font-size:1rem; flex-shrink:0; margin-top:1px; }
   .ab-price-line { display:flex; align-items:baseline; gap:10px; margin-bottom:14px; }
-  .ab-price-old  { text-decoration:line-through; color:#717171; font-size:1rem; }
-  .ab-price-new  { font-size:1.3rem; font-weight:700; text-decoration:underline; }
-  .ab-dates      { border:1.5px solid #222; border-radius:10px; overflow:hidden; margin-bottom:8px; }
-  .ab-dates-row  { display:grid; grid-template-columns:1fr 1fr; }
-  .ab-date-cell  { padding:9px 14px; border-right:1px solid #DDDDDD; }
+  .ab-price-old { text-decoration:line-through; color:#717171; font-size:1rem; }
+  .ab-price-new { font-size:1.3rem; font-weight:700; text-decoration:underline; }
+  .ab-dates { border:1.5px solid #222; border-radius:10px; overflow:hidden; margin-bottom:8px; }
+  .ab-dates-row { display:grid; grid-template-columns:1fr 1fr; }
+  .ab-date-cell { padding:9px 14px; border-right:1px solid #DDDDDD; }
   .ab-date-cell:last-child { border-right:none; }
   .ab-date-label { font-size:.65rem; font-weight:700; letter-spacing:.07em; text-transform:uppercase; }
-  .ab-date-val   { font-size:.9rem; margin-top:2px; }
+  .ab-date-val { font-size:.9rem; margin-top:2px; }
   .ab-guests-row { border:1.5px solid #DDDDDD; border-radius:10px; padding:9px 14px; display:flex; justify-content:space-between; align-items:center; }
   .ab-guests-label { font-size:.65rem; font-weight:700; letter-spacing:.07em; text-transform:uppercase; }
-  .ab-guests-val   { font-size:.9rem; margin-top:2px; }
+  .ab-guests-val { font-size:.9rem; margin-top:2px; }
 </style>
 </head>
 <body>
-
 <div class="dl-bar">
-  <span>✅ Tarjeta lista — 14×10 cm a 300 DPI (1654×1181 px)</span>
+  <span>✅ Tarjeta lista — 14×10 cm a 300 DPI</span>
   <button class="dl-btn" id="dl-btn" onclick="doDownload()">⬇️ Descargar PNG</button>
 </div>
-
 <div id="ab-card">
-
-  <!-- Título -->
   <div class="ab-title-bar">
     <div class="ab-title">${escHTML(d.title)}</div>
-    <div class="ab-title-actions">
-      <span>↑ Compartir</span>
-      <span>♡ Guardar</span>
-    </div>
+    <div class="ab-title-actions"><span>↑ Compartir</span><span>♡ Guardar</span></div>
   </div>
-
-  <!-- Mosaico fotos -->
   <div class="ab-mosaic">
-    ${d.photos[0]
-      ? `<div class="ab-mosaic-main"><img src="${d.photos[0]}" alt="foto 1"></div>`
-      : `<div class="ab-mosaic-main"><div class="ab-photo-ph">🏠</div></div>`}
-    ${[1,2,3,4].map(i => d.photos[i]
-      ? `<div class="ab-mosaic-cell"><img src="${d.photos[i]}" alt="foto ${i+1}"></div>`
-      : `<div class="ab-mosaic-cell"><div class="ab-photo-ph">📷</div></div>`
-    ).join('')}
+    <div class="ab-mosaic-main" id="c-photo-0"><div class="ab-ph">🏠</div></div>
+    ${[1,2,3,4].map(i => `<div class="ab-mosaic-cell" id="c-photo-${i}"><div class="ab-ph">📷</div></div>`).join('')}
     <div class="ab-show-all">⊞ Mostrar todas las fotos</div>
   </div>
-
-  <!-- Cuerpo -->
   <div class="ab-body">
-
-    <!-- Info izq -->
     <div class="ab-info">
       <div class="ab-info-type">${escHTML(d.type)}</div>
       <div class="ab-info-details">${d.guests} viajeros · ${d.beds} dormitorio${d.beds!=1?'s':''} · ${d.baths} baño${d.baths!=1?'s':''}</div>
-
       <div class="ab-badge">
         <div class="ab-badge-icon">🏆</div>
         <div class="ab-badge-label">${escHTML(d.badge1)}</div>
         <div class="ab-badge-sep"></div>
-        <div>
-          <div style="font-size:.78rem;color:#717171;line-height:1.3;max-width:130px;">${escHTML(d.badge2)}</div>
-        </div>
+        <div style="font-size:.78rem;color:#717171;line-height:1.3;max-width:130px;">${escHTML(d.badge2)}</div>
         <div class="ab-badge-sep"></div>
-        <div class="ab-badge-rating">
-          <div class="sc">${escHTML(d.rating)}</div>
-          <div class="st">${starsHTML}</div>
-        </div>
+        <div class="ab-badge-rating"><div class="sc">${escHTML(d.rating)}</div><div class="st">${starsHTML}</div></div>
         <div class="ab-badge-sep"></div>
-        <div class="ab-badge-reviews">
-          <div class="cnt">${escHTML(d.reviews)}</div>
-          <div class="lbl">evaluaciones</div>
-        </div>
+        <div class="ab-badge-reviews"><div class="cnt">${escHTML(d.reviews)}</div><div class="lbl">evaluaciones</div></div>
       </div>
-
       <div class="ab-host-row">
         <div class="ab-avatar">${escHTML(d.host.charAt(0).toUpperCase())}</div>
         <div>
@@ -409,80 +699,61 @@ function buildCardHTML(d) {
         </div>
       </div>
     </div>
-
-    <!-- Booking der -->
     <div class="ab-booking">
-      <div class="ab-lucky">
-        <span class="diamond">♦</span>
-        <span>${escHTML(d.lucky)}</span>
-      </div>
+      <div class="ab-lucky"><span class="diamond">♦</span><span>${escHTML(d.lucky)}</span></div>
       <div class="ab-price-line">
-        <span class="ab-price-old">${d.priceOld} €</span>
-        <span class="ab-price-new">${d.priceNew} € en total</span>
+        <span class="ab-price-old">${escHTML(d.priceOld)} €</span>
+        <span class="ab-price-new">${escHTML(d.priceNew)} € en total</span>
       </div>
       <div class="ab-dates">
         <div class="ab-dates-row">
-          <div class="ab-date-cell">
-            <div class="ab-date-label">LLEGADA</div>
-            <div class="ab-date-val">${escHTML(d.checkin)}</div>
-          </div>
-          <div class="ab-date-cell">
-            <div class="ab-date-label">SALIDA</div>
-            <div class="ab-date-val">${escHTML(d.checkout)}</div>
-          </div>
+          <div class="ab-date-cell"><div class="ab-date-label">LLEGADA</div><div class="ab-date-val">${escHTML(d.checkin)}</div></div>
+          <div class="ab-date-cell"><div class="ab-date-label">SALIDA</div><div class="ab-date-val">${escHTML(d.checkout)}</div></div>
         </div>
       </div>
       <div class="ab-guests-row">
-        <div>
-          <div class="ab-guests-label">VIAJEROS</div>
-          <div class="ab-guests-val">${escHTML(d.guestbook)}</div>
-        </div>
+        <div><div class="ab-guests-label">VIAJEROS</div><div class="ab-guests-val">${escHTML(d.guestbook)}</div></div>
         <span>∨</span>
       </div>
     </div>
-
   </div>
 </div>
-
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"><\/script>
 <script>
+// Recibir fotos via postMessage
+window.addEventListener('message', function(e) {
+  if (!e.data || e.data.type !== 'SET_PHOTOS') return;
+  const photos = e.data.photos;
+  for (let i = 0; i < 5; i++) {
+    if (!photos[i]) continue;
+    const cell = document.getElementById('c-photo-' + i);
+    if (!cell) continue;
+    cell.innerHTML = '<img src="' + photos[i] + '" style="width:100%;height:100%;object-fit:cover;display:block;">';
+  }
+});
+
 async function doDownload() {
-  const btn = document.getElementById('dl-btn');
-  btn.textContent = '⏳ Generando...'; btn.disabled = true;
+  const btn=document.getElementById('dl-btn');
+  btn.textContent='⏳ Generando...'; btn.disabled=true;
   try {
-    const card = document.getElementById('ab-card');
-    const W = card.offsetWidth, H = card.offsetHeight;
-    const raw = await html2canvas(card, {
-      scale: 2, useCORS: true, allowTaint: true,
-      backgroundColor: '#ffffff', logging: false,
-      width: W, height: H, windowWidth: W, windowHeight: H, x:0, y:0
-    });
-    const TW=1654, TH=1181;
-    const fs = Math.min(TW/raw.width, TH/raw.height);
-    const dW=Math.round(raw.width*fs), dH=Math.round(raw.height*fs);
-    const oX=Math.round((TW-dW)/2), oY=Math.round((TH-dH)/2);
-    const fc = document.createElement('canvas');
-    fc.width=TW; fc.height=TH;
+    const card=document.getElementById('ab-card');
+    const W=card.offsetWidth, H=card.offsetHeight;
+    const raw=await html2canvas(card,{scale:2,useCORS:true,allowTaint:true,backgroundColor:'#ffffff',logging:false,width:W,height:H,windowWidth:W,windowHeight:H,x:0,y:0});
+    const TW=1654,TH=1181;
+    const fs=Math.min(TW/raw.width,TH/raw.height);
+    const dW=Math.round(raw.width*fs),dH=Math.round(raw.height*fs);
+    const oX=Math.round((TW-dW)/2),oY=Math.round((TH-dH)/2);
+    const fc=document.createElement('canvas'); fc.width=TW; fc.height=TH;
     const ctx=fc.getContext('2d');
     ctx.fillStyle='#ffffff'; ctx.fillRect(0,0,TW,TH);
     ctx.drawImage(raw,oX,oY,dW,dH);
-    const a=document.createElement('a');
-    a.download='airbnb-card-14x10cm.png';
+    const a=document.createElement('a'); a.download='airbnb-card-14x10cm.png';
     a.href=fc.toDataURL('image/png'); a.click();
-  } catch(e) { alert('Error: '+e.message); }
-  finally { btn.textContent='⬇️ Descargar PNG'; btn.disabled=false; }
+  } catch(e){alert('Error: '+e.message);}
+  finally{btn.textContent='⬇️ Descargar PNG';btn.disabled=false;}
 }
 <\/script>
-</body>
-</html>`;
-}
-
-function escHTML(str) {
-  return String(str)
-    .replace(/&/g,'&amp;')
-    .replace(/</g,'&lt;')
-    .replace(/>/g,'&gt;')
-    .replace(/"/g,'&quot;');
+</body></html>`;
 }
 </script>
 </body>
